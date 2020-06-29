@@ -289,9 +289,6 @@ class TestQuery(TestCase):
         )
 
         captures = query.captures(tree.root_node)
-        captures = query.captures(tree.root_node)
-        captures = query.captures(tree.root_node)
-        captures = query.captures(tree.root_node)
 
         self.assertEqual(captures[0][0].start_point, (0, 4))
         self.assertEqual(captures[0][0].end_point, (0, 7))
@@ -308,6 +305,27 @@ class TestQuery(TestCase):
         self.assertEqual(captures[3][0].start_point, (3, 2))
         self.assertEqual(captures[3][0].end_point, (3, 6))
         self.assertEqual(captures[3][1], "func-call")
+    
+    def test_match(self):
+        parser = Parser()
+        parser.set_language(PYTHON)
+        source = b"def SNAKE_CASE():\n  bar()"
+        tree = parser.parse(source)
+        query = PYTHON.query(
+            """
+            (
+                function_definition name: (identifier) @constant
+                (#match? @constant "^[A-Z][A-Z_]+")
+            )
+            """
+        )
+        
+        captures = query.captures(tree.root_node)
+        
+        self.assertIsNotNone(captures)
+        
+        self.assertLessEqual(captures[0][0].start_point, (0, 4))
+        self.assertLessEqual(captures[0][0].end_point, (0, 14))
 
 
 def trim(string):

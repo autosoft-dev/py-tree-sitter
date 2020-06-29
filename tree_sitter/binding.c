@@ -629,7 +629,7 @@ static PyObject *query_captures(Query *self, PyObject *args, PyObject *kwargs) {
     PyErr_SetString(PyExc_TypeError, "First argument to captures must be a Node");
     return NULL;
   }
-
+  
   if (!query_cursor) query_cursor = ts_query_cursor_new();
   ts_query_cursor_exec(query_cursor, self->query, node->node);
 
@@ -695,6 +695,7 @@ static PyObject *query_new_internal(
   query->query = ts_query_new(
     language, source, length, &error_offset, &error_type
   );
+
   if (!query->query) {
     char *word_start = &source[error_offset];
     char *word_end = word_start;

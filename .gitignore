@@ -6,3 +6,9 @@ dist
 *.so
 __pycache__
 tests/fixtures
+
+# VSCode things
+.vscode/
+
+# Python Version
+.python-version
